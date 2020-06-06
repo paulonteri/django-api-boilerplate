@@ -129,3 +129,12 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # CORS_ORIGIN_WHITELIST = ['http://example.com', 'https://example.com']
 
+
+# REST_FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':
+        ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
