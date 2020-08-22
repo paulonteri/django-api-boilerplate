@@ -131,3 +131,16 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
     }
+
+SENTRY_ACTIVE = False
+if os.environ.get('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=os.environ['SENTRY_DSN'],
+        integrations=[DjangoIntegration()],
+        send_default_pii=True,
+        environment=os.environ.get('SENTRY_ENVIRONMENT', 'production'),
+    )
+    SENTRY_ACTIVE = True
