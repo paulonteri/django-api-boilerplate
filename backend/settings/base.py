@@ -17,6 +17,8 @@ INSTALLED_APPS = [
     'knox',
     # local apps
     'accounts',
+    # always last
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
