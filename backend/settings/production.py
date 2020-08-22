@@ -7,9 +7,14 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env.bool('DEBUG')
 
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST')
 
 DATABASES = {
     'default': {
@@ -22,8 +27,8 @@ DATABASES = {
     }
 }
 
-# django-cors-headers
-CORS_ORIGIN_WHITELIST = ['http://example.com', 'https://example.com']
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
 
 # REST_FRAMEWORK
 REST_FRAMEWORK = {
@@ -36,8 +41,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
 
 LOGGING = {
     'version': 1,
