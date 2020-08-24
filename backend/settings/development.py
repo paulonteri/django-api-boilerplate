@@ -98,7 +98,7 @@ if os.environ.get('CACHE_HOST'):
 
     # this should not happen
     # https://github.com/Suor/django-cacheops#sharing-redis-instance
-    CACHEOPS_PREFIX = lambda _: env("CACHEOPS_PREFIX", "dev.com.demo.shulesuite")
+    CACHEOPS_PREFIX = lambda _: env("CACHEOPS_PREFIX", "com.demo.paulonteri.com")
 
     CACHEOPS_DEGRADE_ON_FAILURE = True
 
@@ -113,7 +113,6 @@ if os.environ.get('CACHE_HOST'):
         # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
         # 'name_app.*': None,
     }
-
 
     # cache feedback
     def stats_collector(sender, func, hit, **kwargs):
