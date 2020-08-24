@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'knox',
     # local apps
     'accounts',
-    # always last
+    # always last. Used to auto delete files.
     'django_cleanup.apps.CleanupConfig',
 ]
 

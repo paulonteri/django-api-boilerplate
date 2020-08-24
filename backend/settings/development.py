@@ -3,6 +3,7 @@ from backend.settings.base import *
 SECRET_KEY = '6h03)d($%+c4r#p65#ctnk3*u21^v@q+*e^ue0+llrq%zv(94z'
 
 DEBUG = True
+TESTING = True
 
 ALLOWED_HOSTS = ["*", ]
 
@@ -61,3 +62,22 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 SENTRY_ACTIVE = False
+
+# Django Query Count (Only works with Debug=True)
+# https://github.com/bradmontgomery/django-querycount
+QUERYCOUNT = {
+    'THRESHOLDS': {
+        'MEDIUM': 50,
+        'HIGH': 200,
+        'MIN_TIME_TO_LOG': 0,
+        'MIN_QUERY_COUNT_TO_LOG': 0
+    },
+    'IGNORE_REQUEST_PATTERNS': [],
+    'IGNORE_SQL_PATTERNS': [],
+    'DISPLAY_DUPLICATES': 10,
+    'RESPONSE_HEADER': 'X-DjangoQueryCount-Count'
+}
+
+MIDDLEWARE += [
+    'querycount.middleware.QueryCountMiddleware',
+]

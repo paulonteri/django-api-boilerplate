@@ -6,6 +6,7 @@ env = Env()
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env.bool('DEBUG')
+TESTING = env.bool('TESTING', False)
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -49,7 +50,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissions'
     ]
 }
-
 
 LOGGING = {
     'version': 1,
@@ -144,3 +144,23 @@ if os.environ.get('SENTRY_DSN'):
         environment=os.environ.get('SENTRY_ENVIRONMENT', 'production'),
     )
     SENTRY_ACTIVE = True
+
+# Django Query Count (Only works with Debug=True)
+# https://github.com/bradmontgomery/django-querycount
+if TESTING:
+    QUERYCOUNT = {
+        'THRESHOLDS': {
+            'MEDIUM': 50,
+            'HIGH': 200,
+            'MIN_TIME_TO_LOG': 0,
+            'MIN_QUERY_COUNT_TO_LOG': 0
+        },
+        'IGNORE_REQUEST_PATTERNS': [],
+        'IGNORE_SQL_PATTERNS': [],
+        'DISPLAY_DUPLICATES': 10,
+        'RESPONSE_HEADER': 'X-DjangoQueryCount-Count'
+    }
+
+    MIDDLEWARE += [
+        'querycount.middleware.QueryCountMiddleware',
+    ]

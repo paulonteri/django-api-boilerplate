@@ -3,6 +3,7 @@
 .idea
 
 env/
+venv/
 .env
 
 ### Django ###
