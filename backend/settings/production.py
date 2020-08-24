@@ -22,6 +22,7 @@ DATABASES = {
         'PASSWORD': env("DB_PASSWORD"),
         'HOST': env("DB_HOST"),
         'PORT': env("DB_PORT"),
+        'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', 0),
     }
 }
 
