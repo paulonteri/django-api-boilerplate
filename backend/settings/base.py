@@ -1,7 +1,10 @@
 import os
+from environs import Env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+env = Env()
 
 # Application definition
 INSTALLED_APPS = [

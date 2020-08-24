@@ -1,7 +1,4 @@
 from backend.settings.base import *
-from environs import Env
-
-env = Env()
 
 SECRET_KEY = env('SECRET_KEY')
 
@@ -164,3 +161,42 @@ if TESTING:
     MIDDLEWARE += [
         'querycount.middleware.QueryCountMiddleware',
     ]
+
+# Django Cacheops
+# https://github.com/Suor/django-cacheops
+if os.environ.get('CACHE_HOST'):
+    CACHEOPS_PREFIX = lambda _: env("CACHEOPS_PREFIX")
+
+    CACHEOPS_REDIS = {
+        'host': env('CACHE_HOST'),
+        'port': env.int('CACHE_PORT'),
+        # 'db': env('CACHE_DB'),
+        'password': env('CACHE_PASSWORD'),
+        'socket_timeout': 3,
+    }
+
+    CACHEOPS_DEGRADE_ON_FAILURE = True
+
+    CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
+    CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
+
+    # cacheops settings
+    # https://github.com/Suor/django-cacheops#setup
+    CACHEOPS = {
+        'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
+        # 'app_name.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES},
+        # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
+        # 'name_app.*': None,
+    }
+
+    if DEBUG or TESTING:
+        from cacheops.signals import cache_read
+
+
+        def stats_collector(sender, func, hit, **kwargs):
+            event = 'hit' if hit else 'miss'
+            print(event)
+            print(func)
+
+
+        cache_read.connect(stats_collector)
