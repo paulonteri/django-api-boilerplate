@@ -2,8 +2,8 @@ name: Test
 on: [push, pull_request]
 
 env:
-    SECRET_KEY : shulesuite.com
-    DJANGO_SETTINGS_MODULE: school.settings.production
+    SECRET_KEY : www.paulonteri.com
+    DJANGO_SETTINGS_MODULE: backend.settings.production
     DEBUG : False
     TESTING: False
 
