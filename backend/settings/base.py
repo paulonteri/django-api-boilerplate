@@ -75,12 +75,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
-USE_I18N = True
+# Django’s translation system
+USE_I18N = False
 
 USE_L10N = True
 
