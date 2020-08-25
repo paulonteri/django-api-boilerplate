@@ -16,7 +16,6 @@ DATABASES = {
 }
 
 # django-cors-headers
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 # REST_FRAMEWORK
@@ -102,7 +101,6 @@ if os.environ.get('CACHE_HOST'):
 
     CACHEOPS_DEGRADE_ON_FAILURE = True
 
-
     # cache feedback
     def stats_collector(sender, func, hit, **kwargs):
         event = 'hit' if hit else 'miss'
@@ -111,6 +109,8 @@ if os.environ.get('CACHE_HOST'):
 
 
     cache_read.connect(stats_collector)
+else:
+    CACHEOPS_ENABLED = False
 
 # Outside if statement to prevent cache not enabled errors
 # cacheops settings

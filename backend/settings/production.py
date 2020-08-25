@@ -1,3 +1,5 @@
+from google.oauth2 import service_account
+
 from backend.settings.base import *
 
 SECRET_KEY = env('SECRET_KEY')
@@ -19,6 +21,17 @@ DATABASES = {
         'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', 0),
     }
 }
+
+# Google Cloud Storage
+# https://django-storages.readthedocs.io/en/latest/backends/gcloud.html
+if os.environ.get('GS_BUCKET_NAME'):
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    # STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_DEFAULT_ACL = env('GS_DEFAULT_ACL', 'publicRead')
+    GS_FILE_OVERWRITE = False
+    GS_BUCKET_NAME = env('GS_BUCKET_NAME')
+    GS_LOCATION = env('GS_LOCATION')
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(info=env.json('GS_SERVICE_ACC'))
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
