@@ -57,3 +57,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class TestImage(models.Model):
     image = models.ImageField()
+
