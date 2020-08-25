@@ -1,28 +1,29 @@
 from google.oauth2 import service_account
-
+import sys
 from backend.settings.base import *
 
 SECRET_KEY = env('SECRET_KEY')
-
-DEBUG = env.bool('DEBUG')
+DEBUG = env.bool('DEBUG', False)
 TESTING = env.bool('TESTING', False)
+DJANGO_TESTS = sys.argv[1:2] == ['test']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', 'localhost')
+CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST', 'http://localhost:3000')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST')
-
+# # # # # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
-        'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', 0),
+        'ENGINE': env('DB_ENGINE', 'django.db.backends.postgresql_psycopg2'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env.int('DB_PORT', 5432),
+        'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', 2),
+
     }
 }
 
-# Google Cloud Storage
+# # # # # Google Cloud Storage
 # https://django-storages.readthedocs.io/en/latest/backends/gcloud.html
 if os.environ.get('GS_BUCKET_NAME'):
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
@@ -45,7 +46,7 @@ TEMPLATE_LOADERS = (
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# REST_FRAMEWORK
+# # # # # REST_FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
         ('knox.auth.TokenAuthentication',),
@@ -56,6 +57,7 @@ REST_FRAMEWORK = {
     ]
 }
 
+# # # # # LOGGING
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -108,6 +110,7 @@ LOGGING = {
     }
 }
 
+# # # # # Django Debug Middleware
 if DEBUG:
     INTERNAL_IPS = ('127.0.0.1',)
     MIDDLEWARE += [
@@ -137,20 +140,22 @@ if DEBUG:
         'INTERCEPT_REDIRECTS': False,
     }
 
+# # # # # Sentry
 SENTRY_ACTIVE = False
 if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.redis import RedisIntegration
 
     sentry_sdk.init(
         dsn=os.environ['SENTRY_DSN'],
-        integrations=[DjangoIntegration()],
+        integrations=[DjangoIntegration(), RedisIntegration()],
         send_default_pii=True,
-        environment=os.environ.get('SENTRY_ENVIRONMENT', 'production'),
+        environment=os.environ.get('SENTRY_ENVIRONMENT', 'development'),
     )
     SENTRY_ACTIVE = True
 
-# Django Query Count (Only works with Debug=True)
+# # # # #  Django Query Count (Only works with Debug=True)
 # https://github.com/bradmontgomery/django-querycount
 if TESTING:
     QUERYCOUNT = {
@@ -170,7 +175,7 @@ if TESTING:
         'querycount.middleware.QueryCountMiddleware',
     ]
 
-# Django Cacheops
+# # # # #  Cacheops
 # https://github.com/Suor/django-cacheops
 if os.environ.get('CACHE_HOST'):
     CACHEOPS_PREFIX = lambda _: env("CACHEOPS_PREFIX")
