@@ -102,17 +102,6 @@ if os.environ.get('CACHE_HOST'):
 
     CACHEOPS_DEGRADE_ON_FAILURE = True
 
-    CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
-    CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
-
-    # cacheops settings
-    # https://github.com/Suor/django-cacheops#setup
-    CACHEOPS = {
-        'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
-        # 'app_name.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES},
-        # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
-        # 'name_app.*': None,
-    }
 
     # cache feedback
     def stats_collector(sender, func, hit, **kwargs):
@@ -122,3 +111,15 @@ if os.environ.get('CACHE_HOST'):
 
 
     cache_read.connect(stats_collector)
+
+# Outside if statement to prevent cache not enabled errors
+# cacheops settings
+# https://github.com/Suor/django-cacheops#setup
+CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
+CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
+CACHEOPS = {
+    'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
+    # 'app_name.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES},
+    # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
+    # 'name_app.*': None,
+}

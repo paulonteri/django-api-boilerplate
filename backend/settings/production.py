@@ -172,18 +172,6 @@ if os.environ.get('CACHE_HOST'):
 
     CACHEOPS_DEGRADE_ON_FAILURE = True
 
-    CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
-    CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
-
-    # cacheops settings
-    # https://github.com/Suor/django-cacheops#setup
-    CACHEOPS = {
-        'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
-        # 'app_name.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES},
-        # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
-        # 'name_app.*': None,
-    }
-
     if DEBUG or TESTING:
         from cacheops.signals import cache_read
 
@@ -195,3 +183,20 @@ if os.environ.get('CACHE_HOST'):
 
 
         cache_read.connect(stats_collector)
+
+else:
+    CACHEOPS_ENABLED = False
+
+# cacheops settings
+# https://github.com/Suor/django-cacheops#setup
+# Outside if statement to prevent cache not enabled errors
+CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
+CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
+CACHEOPS = {
+    'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
+    # django.contrib.auth models
+    'auth.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * CACHE_MINUTES},
+    # 'app_name.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES},
+    # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
+    # 'name_app.*': None,
+}
