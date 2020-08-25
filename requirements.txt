@@ -16,6 +16,7 @@ funcy==1.14
 marshmallow==3.6.1
 mypy==0.782
 mypy-extensions==0.4.3
+Pillow==7.2.0
 psycopg2-binary==2.8.5
 pycodestyle==2.6.0
 pycparser==2.20

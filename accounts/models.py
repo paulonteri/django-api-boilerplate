@@ -53,3 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
+
+
+class TestImage(models.Model):
+    image = models.ImageField()
