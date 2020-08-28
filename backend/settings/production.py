@@ -36,8 +36,6 @@ if os.environ.get('GS_BUCKET_NAME'):
     GS_LOCATION = env('GS_LOCATION')
     GS_CREDENTIALS = service_account.Credentials.from_service_account_info(info=env.json('GS_SERVICE_ACC'))
 
-
-
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
         'django.template.loaders.filesystem.Loader',
@@ -55,7 +53,15 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions'
-    ]
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '100/hour'
+    }
 }
 
 # # # # # LOGGING
