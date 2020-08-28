@@ -17,15 +17,18 @@ def error_500(request):
 
 
 def error_400(request, exception):
+    print(exception)
     log_error("Server Error" + str(exception))
     return HttpResponse("Bad Request")
 
 
 def error_403(request, exception):
+    print(exception)
     log_error("Permission Denied" + str(exception))
     return HttpResponse("Permission Denied")
 
 
 def error_404(request, exception):
+    print(exception)
     log_error("Not Found" + str(exception))
     return HttpResponse("Not Found")

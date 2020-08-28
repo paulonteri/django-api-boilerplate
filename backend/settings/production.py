@@ -220,6 +220,26 @@ CACHEOPS = {
     # 'name_app.*': None,
 }
 
+#
+# DJANGO CACHE
+if os.environ.get('CACHE_HOST') and not DJANGO_TESTS:
+    CACHES = {
+        'default': {
+            # 'LOCATION': "redis://[:password]@localhost:6379/0",
+            'LOCATION': "redis://[:" + env.str('CACHE_PASSWORD')
+                        + env.str('CACHE_HOST') + ":" + env.str('CACHE_PORT') + "/0",
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                "CONNECTION_POOL_KWARGS": {"max_connections": 20}
+            },
+            'KEY_PREFIX': env('DJANGO_CACHE_KEY_PREFIX')
+        }
+    }
+
+    CACHE_TTL = 60 * CACHE_MINUTES_LONGER
+    DJANGO_REDIS_IGNORE_EXCEPTIONS = True
+    DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
+
 # # # # #  REST_KNOX
 REST_KNOX = {
     'TOKEN_TTL': timedelta(hours=12),
