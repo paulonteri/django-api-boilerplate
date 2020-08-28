@@ -5,19 +5,20 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
 
-handler404 = 'backend.views.error_404'
-handler500 = 'backend.views.error_500'
-handler403 = 'backend.views.error_403'
-handler400 = 'backend.views.error_400'
+if not settings.TESTING and not settings.DEBUG:
+    handler404 = 'backend.views.error_404'
+    handler500 = 'backend.views.error_500'
+    handler403 = 'backend.views.error_403'
+    handler400 = 'backend.views.error_400'
 
 
 def pong(request):
-    return HttpResponse("pong")
+    return HttpResponse(request.META['REMOTE_HOST'])
 
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
-                  path('ping/', pong),
+                  path('api/ping/', pong),
                   path('api/v1/auth/', include('accounts.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

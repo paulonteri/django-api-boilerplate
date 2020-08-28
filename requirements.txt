@@ -1,5 +1,6 @@
 asgiref==3.2.7
 autopep8==1.5.4
+Brotli==1.0.9
 cachetools==4.1.1
 certifi==2020.6.20
 cffi==1.14.0
@@ -46,3 +47,4 @@ toml==0.10.1
 typed-ast==1.4.1
 typing-extensions==3.7.4.2
 urllib3==1.25.10
+whitenoise==5.2.0

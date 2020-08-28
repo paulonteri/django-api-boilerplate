@@ -34,8 +34,7 @@ if os.environ.get('GS_BUCKET_NAME'):
     GS_LOCATION = env('GS_LOCATION')
     GS_CREDENTIALS = service_account.Credentials.from_service_account_info(info=env.json('GS_SERVICE_ACC'))
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
+
 
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
