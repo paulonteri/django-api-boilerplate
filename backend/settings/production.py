@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from google.oauth2 import service_account
 import sys
 from backend.settings.base import *
@@ -217,3 +219,15 @@ CACHEOPS = {
     # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
     # 'name_app.*': None,
 }
+
+# # # # #  REST_KNOX
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(hours=12),
+    'TOKEN_LIMIT_PER_USER': 1,
+}
+
+if not DEBUG and not TESTING:
+    # Whitenoise
+    # Will have error if used with development server
+    # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
