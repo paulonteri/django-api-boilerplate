@@ -21,7 +21,7 @@ DATABASES = {
         'HOST': env('DB_HOST'),
         'PORT': env.int('DB_PORT', 5432),
         'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', 2),
-
+        'ATOMIC_REQUESTS': env.bool('ATOMIC_REQUESTS', False),
     }
 }
 
