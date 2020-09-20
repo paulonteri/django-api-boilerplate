@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.7-alpine
 
 ENV PYTHONUNBUFFERED 1 # environment variable
 RUN mkdir /code
@@ -12,7 +12,5 @@ RUN apk add zlib gcc python3-dev jpeg-dev zlib-dev
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENV PORT 8080
-
 # The maximum concurrent requests are 'workers * threads'
-CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 school.wsgi:application
+CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 backend.wsgi:application
