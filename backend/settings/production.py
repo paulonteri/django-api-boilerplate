@@ -1,15 +1,15 @@
 from datetime import timedelta
 
-from google.oauth2 import service_account
 import sys
-from backend.settings.base import *
+from backend.settings.base import *  # noqa
 
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', False)
 TESTING = env.bool('TESTING', False)
 DJANGO_TESTS = sys.argv[1:2] == ['test']
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', 'localhost')
-CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST', 'http://localhost:3000')
+CORS_ORIGIN_WHITELIST = env.list(
+    'CORS_ORIGIN_WHITELIST', 'http://localhost:3000')
 
 # # # # # Database
 DATABASES = {
@@ -28,13 +28,15 @@ DATABASES = {
 # # # # # Google Cloud Storage
 # https://django-storages.readthedocs.io/en/latest/backends/gcloud.html
 if os.environ.get('GS_BUCKET_NAME'):
+    from google.oauth2 import service_account
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     # STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_DEFAULT_ACL = env('GS_DEFAULT_ACL', 'publicRead')
     GS_FILE_OVERWRITE = False
     GS_BUCKET_NAME = env('GS_BUCKET_NAME')
     GS_LOCATION = env('GS_LOCATION')
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(info=env.json('GS_SERVICE_ACC'))
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+        info=env.json('GS_SERVICE_ACC'))
 
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
@@ -53,15 +55,15 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions'
-    ],
+        ],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle'
-    ],
+        ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '100/day',
         'user': '100/hour'
-    }
+        }
 }
 
 # # # # # LOGGING
@@ -185,7 +187,7 @@ if TESTING:
 # # # # #  Cacheops
 # https://github.com/Suor/django-cacheops
 if os.environ.get('CACHE_HOST'):
-    CACHEOPS_PREFIX = lambda _: env("CACHEOPS_PREFIX")
+    def CACHEOPS_PREFIX(_): return env("CACHEOPS_PREFIX")
 
     CACHEOPS_REDIS = {
         'host': env('CACHE_HOST'),
@@ -200,12 +202,10 @@ if os.environ.get('CACHE_HOST'):
     if DEBUG or TESTING:
         from cacheops.signals import cache_read
 
-
         def stats_collector(sender, func, hit, **kwargs):
             event = 'hit' if hit else 'miss'
             print(event)
             print(func)
-
 
         cache_read.connect(stats_collector)
 
@@ -216,7 +216,8 @@ else:
 # https://github.com/Suor/django-cacheops#setup
 # Outside if statement to prevent cache not enabled errors
 CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
-CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
+CACHE_MINUTES_LONGER = int(
+    os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
 CACHEOPS = {
     'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
     # django.contrib.auth models
@@ -233,7 +234,8 @@ if os.environ.get('CACHE_HOST') and not DJANGO_TESTS:
         'default': {
             # 'LOCATION': "redis://[:password]@localhost:6379/0",
             'LOCATION': "redis://[:" + env.str('CACHE_PASSWORD')
-                        + env.str('CACHE_HOST') + ":" + env.str('CACHE_PORT') + "/0",
+                        + env.str('CACHE_HOST') + ":" + \
+            env.str('CACHE_PORT') + "/0",
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
                 "CONNECTION_POOL_KWARGS": {"max_connections": 20}
@@ -252,8 +254,9 @@ REST_KNOX = {
     'TOKEN_LIMIT_PER_USER': 1,
 }
 
-if not DEBUG and not TESTING:
-    # Whitenoise
-    # Will have error if used with development server
-    # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# causes 500 errors
+# if not DEBUG and not TESTING:
+#     # Whitenoise
+#     # Will have error if used with development server
+#     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
+#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -1,4 +1,4 @@
-from backend.settings.base import *
+from backend.settings.base import *  # noqa
 
 SECRET_KEY = '6h03)d($%+c4r#p65#ctnk3*u21^v@q+*e^ue0+llrq%zv(94z'
 
@@ -24,7 +24,7 @@ REST_FRAMEWORK = {
         ('knox.auth.TokenAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
-    ]
+        ]
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -97,7 +97,8 @@ if os.environ.get('CACHE_HOST'):
 
     # this should not happen
     # https://github.com/Suor/django-cacheops#sharing-redis-instance
-    CACHEOPS_PREFIX = lambda _: env("CACHEOPS_PREFIX", "com.demo.paulonteri.com")
+    def CACHEOPS_PREFIX(_): return env(
+        "CACHEOPS_PREFIX", "com.demo.paulonteri.com")
 
     CACHEOPS_DEGRADE_ON_FAILURE = True
 
@@ -107,7 +108,6 @@ if os.environ.get('CACHE_HOST'):
         print(event)
         print(func)
 
-
     cache_read.connect(stats_collector)
 else:
     CACHEOPS_ENABLED = False
@@ -116,7 +116,8 @@ else:
 # cacheops settings
 # https://github.com/Suor/django-cacheops#setup
 CACHE_MINUTES = int(os.environ.setdefault('CACHE_MINUTES', '10080'))
-CACHE_MINUTES_LONGER = int(os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
+CACHE_MINUTES_LONGER = int(
+    os.environ.setdefault('CACHE_MINUTES_LONGER', '87600'))
 CACHEOPS = {
     'accounts.*': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60},
     # 'app_name.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES},
