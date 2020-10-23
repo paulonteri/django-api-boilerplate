@@ -17,10 +17,11 @@ def pong(request):
 
 
 urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('api/ping/', pong),
-                  path('api/v1/auth/', include('accounts.urls')),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('', include('accounts.template_urls')),
+    path('admin/', admin.site.urls),
+    path('api/ping/', pong),
+    path('api/v1/auth/', include('accounts.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Django Debug Toolbar
 if settings.DEBUG:
@@ -33,18 +34,15 @@ if settings.DEBUG:
 if settings.TESTING or settings.DEBUG:
     from cacheops import invalidate_all
 
-
     def trigger_error(request):
         # Test Sentry
         division_by_zero = 1 / 0
         return division_by_zero
 
-
     def invalidate_cache(request):
         # Invalidate Cache
         invalidate_all()
         return HttpResponse("Cache invalidated")
-
 
     urlpatterns += [
         path('sentry-debug/', trigger_error),
