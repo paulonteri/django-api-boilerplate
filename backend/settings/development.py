@@ -124,3 +124,7 @@ CACHEOPS = {
     # 'products.*': {'ops': 'all', 'timeout': 60 * CACHE_MINUTES_LONGER},
     # 'name_app.*': None,
 }
+
+# HEROKU
+# Activate Django-Heroku.
+django_heroku.settings(locals())

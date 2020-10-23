@@ -260,3 +260,9 @@ REST_KNOX = {
 #     # Will have error if used with development server
 #     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
 #     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# HEROKU
+if os.environ.get('HEROKU'):
+    # Activate Django-Heroku.
+    django_heroku.settings(locals())
